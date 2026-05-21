@@ -13,6 +13,7 @@ class DevHubRepository(private val toolDao: ToolDao) {
     val favoriteTools: Flow<List<ToolEntity>> = toolDao.getFavoriteTools()
     val allUpdates: Flow<List<DailyUpdateEntity>> = toolDao.getDailyUpdates()
     val allPerks: Flow<List<PerkEntity>> = toolDao.getAllPerks()
+    val allBounties: Flow<List<BountyEntity>> = toolDao.getAllBounties()
 
     suspend fun updateFavorite(toolId: String, isFav: Boolean) {
         toolDao.updateFavoriteStatus(toolId, isFav)
@@ -24,6 +25,18 @@ class DevHubRepository(private val toolDao: ToolDao) {
 
     suspend fun updatePerkStatus(perkId: String, status: String) {
         toolDao.updatePerkStatus(perkId, status)
+    }
+
+    suspend fun claimBounty(bountyId: String) {
+        toolDao.updateBountyStatus(bountyId, "CLAIMED")
+    }
+
+    suspend fun submitBountyPR(bountyId: String, prUrl: String, notes: String) {
+        toolDao.submitBountyPR(bountyId, "SUBMITTED", prUrl, notes)
+    }
+
+    suspend fun rewardBountyInstantly(bountyId: String) {
+        toolDao.updateBountyStatus(bountyId, "COMPLETED")
     }
 
     suspend fun addSimulatedAlert(title: String, category: String, description: String, techImpact: String): DailyUpdateEntity {
@@ -58,6 +71,12 @@ class DevHubRepository(private val toolDao: ToolDao) {
         if (perksCount == 0) {
             val initialPerks = generateInitialPerks()
             toolDao.insertPerks(initialPerks)
+        }
+
+        val bountiesCount = toolDao.getAllBounties().first().size
+        if (bountiesCount == 0) {
+            val initialBounties = generateInitialBounties()
+            toolDao.insertBounties(initialBounties)
         }
     }
 
@@ -502,6 +521,66 @@ class DevHubRepository(private val toolDao: ToolDao) {
                 trialPeriod = "30 Days Free Access",
                 claimedStatus = "ELIGIBLE",
                 docUrl = "https://www.cloudskillsboost.google"
+            )
+        )
+    }
+
+    private fun generateInitialBounties(): List<BountyEntity> {
+        return listOf(
+            BountyEntity(
+                id = "bounty_gemini_kotlin_docs",
+                title = "Write Kotlin samples for context caching in Gemini API",
+                project = "google-gemini-kotlin-sdk",
+                reward = 180.00,
+                difficulty = "Easy",
+                category = "Documentation",
+                skills = "Kotlin, Markdown, Gemini API",
+                description = "Create complete and fully functional Kotlin code snippets demonstrating how to initialize and retrieve cached contexts using the modern Gemini SDK. Port these onto the main documentation hub.",
+                requirements = "Create cache builder function, Write a comprehensive markdown README, Integrate inline annotations for enterprise usage"
+            ),
+            BountyEntity(
+                id = "bounty_firebase_compose_perf",
+                title = "Optimize composable state-reads in Firebase Auth screen",
+                project = "firebase-android-sdk",
+                reward = 320.00,
+                difficulty = "Medium",
+                category = "Performance",
+                skills = "Jetpack Compose, Kotlin",
+                description = "Locate and optimize redundant state recompositions triggered by Auth-state listeners within composable nodes in Firebase Android SDK. Wrap inputs in derivedStateOf where applicable.",
+                requirements = "Identify 3 high-volume recomposition leaks, Apply structural state deferral using lambda modifiers, Ensure full backward compatibility"
+            ),
+            BountyEntity(
+                id = "bounty_tflite_ondevice_detection",
+                title = "Implement TensorFlow-Lite image classifier example",
+                project = "tensorflow-lite-android",
+                reward = 450.00,
+                difficulty = "Hard",
+                category = "Feature",
+                skills = "TensorFlow Lite, Kotlin, Cameras",
+                description = "Create a high-performance end-to-end on-device image bounding classification example using CameraX and TensorFlow Lite GPU delegates.",
+                requirements = "Initialize interpreter with local GPU/NNAPI delegate, Bind analyzer frame stream efficiently, Plot bounding labels in real-time on Canvas"
+            ),
+            BountyEntity(
+                id = "bounty_maps_marker_cluster",
+                title = "Fix dynamic 3D marker clustering rendering lags",
+                project = "maps-compose-extension",
+                reward = 250.00,
+                difficulty = "Medium",
+                category = "Bug Fix",
+                skills = "Google Maps, Compose, Algorithms",
+                description = "Resolve high-latency issues when clustering over 1,000 active markers under rapid pinch-to-zoom gestures. Implement standard quadtree partitioning algorithm.",
+                requirements = "Write quadtree partitioning generator, Cache sub-zoom indices, Reduce main thread block runtime by 70%"
+            ),
+            BountyEntity(
+                id = "bounty_apps_script_exporter",
+                title = "Build Google Sheets exporter tool for micro-saas",
+                project = "google-apps-script-starter",
+                reward = 110.00,
+                difficulty = "Easy",
+                category = "Feature",
+                skills = "JavaScript, Apps Script",
+                description = "Construct an ultra-fast Apps Script module that reads structured database inputs via HTTP API and streams them instantly formatted as XLS in Google Drive.",
+                requirements = "Provide REST authentication layer, Handle streaming response parsing, Auto-format column sizing"
             )
         )
     }

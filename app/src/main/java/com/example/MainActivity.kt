@@ -27,6 +27,7 @@ import com.example.ui.screens.CatalogScreen
 import com.example.ui.screens.DailyFeedScreen
 import com.example.ui.screens.FavoritesScreen
 import com.example.ui.screens.PerksScreen
+import com.example.ui.screens.BountiesScreen
 import com.example.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -153,6 +154,13 @@ fun DevHubApp() {
                     label = { Text("Saved Desk", fontSize = 11.sp, fontWeight = FontWeight.Medium) },
                     modifier = Modifier.testTag("nav_saved")
                 )
+                NavigationBarItem(
+                    selected = currentTab == 4,
+                    onClick = { currentTab = 4 },
+                    icon = { Icon(if (currentTab == 4) Icons.Default.Paid else Icons.Outlined.Paid, contentDescription = "Bounties") },
+                    label = { Text("Bounties", fontSize = 11.sp, fontWeight = FontWeight.Medium) },
+                    modifier = Modifier.testTag("nav_bounties")
+                )
             }
         }
     ) { innerPadding ->
@@ -167,6 +175,7 @@ fun DevHubApp() {
                 1 -> DailyFeedScreen(viewModel)
                 2 -> PerksScreen(viewModel)
                 3 -> FavoritesScreen(viewModel)
+                4 -> BountiesScreen(viewModel)
             }
         }
     }

@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ToolEntity::class, DailyUpdateEntity::class, PerkEntity::class],
+    entities = [ToolEntity::class, DailyUpdateEntity::class, PerkEntity::class, BountyEntity::class],
     version = 1,
     exportSchema = false
 )

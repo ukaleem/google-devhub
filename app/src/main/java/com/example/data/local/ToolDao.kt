@@ -40,4 +40,20 @@ interface ToolDao {
 
     @Query("UPDATE developer_perks SET claimedStatus = :status WHERE id = :perkId")
     suspend fun updatePerkStatus(perkId: String, status: String)
+
+    // ---- Open Source Paid Bounties Queries ----
+    @Query("SELECT * FROM open_source_bounties")
+    fun getAllBounties(): Flow<List<BountyEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBounties(bounties: List<BountyEntity>)
+
+    @Query("UPDATE open_source_bounties SET status = :status WHERE id = :bountyId")
+    suspend fun updateBountyStatus(bountyId: String, status: String)
+
+    @Query("UPDATE open_source_bounties SET status = :status, prUrl = :prUrl, submissionNotes = :submissionNotes WHERE id = :bountyId")
+    suspend fun submitBountyPR(bountyId: String, status: String, prUrl: String, submissionNotes: String)
+
+    @Query("SELECT * FROM open_source_bounties WHERE id = :bountyId LIMIT 1")
+    suspend fun getBountyById(bountyId: String): BountyEntity?
 }

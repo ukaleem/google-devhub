@@ -57,6 +57,9 @@ class DevHubViewModel(application: Application) : AndroidViewModel(application) 
     val perksStream: StateFlow<List<PerkEntity>> = repository.allPerks
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val bountiesStream: StateFlow<List<BountyEntity>> = repository.allBounties
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     // Combined filtered tools for Catalog
     val filteredTools: StateFlow<List<ToolEntity>> = combine(
         repository.allTools,
@@ -120,6 +123,24 @@ class DevHubViewModel(application: Application) : AndroidViewModel(application) 
     fun updatePerkStatus(perkId: String, status: String) {
         viewModelScope.launch {
             repository.updatePerkStatus(perkId, status)
+        }
+    }
+
+    fun claimBounty(bountyId: String) {
+        viewModelScope.launch {
+            repository.claimBounty(bountyId)
+        }
+    }
+
+    fun submitBountyPR(bountyId: String, prUrl: String, notes: String) {
+        viewModelScope.launch {
+            repository.submitBountyPR(bountyId, prUrl, notes)
+        }
+    }
+
+    fun rewardBountyInstantly(bountyId: String) {
+        viewModelScope.launch {
+            repository.rewardBountyInstantly(bountyId)
         }
     }
 
