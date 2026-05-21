@@ -1,0 +1,6 @@
+{
+  "name": "Google DevHub",
+  "description": "Premium aggregator of Google Developer Tools, sandbox credits, and real-time AI launches for professional developers and startups.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
